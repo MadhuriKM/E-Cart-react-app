@@ -2,8 +2,10 @@ const express = require('express')
 const dotenv = require('dotenv')
 dotenv.config()
 const cors = require('cors')
-const cookieParser = require('cookie-parser')
+const morgan = require('morgan')
+// const cookieParser = require('cookie-parser')
 const { StatusCodes } = require('http-status-codes')
+const cookieParser = require('cookie-parser')
 const dbConnect = require('./db/connect')
 
 const PORT = process.env.PORT
@@ -15,6 +17,7 @@ app.use(express.urlencoded({ extended: true}))
 app.use(express.json())
 app.use(cors())
 app.use(cookieParser(process.env.ACCESS_SECRET)) // secure cookies
+app.use(morgan())
 
 // initial route
 app.get(`/`, async (req,res) => {
@@ -23,6 +26,8 @@ app.get(`/`, async (req,res) => {
 
 // api routes
 app.use(`/api/auth`, require('./route/authRoute'))
+app.use(`/api/category`, require('./route/categoryRoute'))
+app.use(`/api/product`, require('./route/productRoute'))
 
 // default route
 app.all(`/*`, async (req,res) => {
