@@ -7,9 +7,10 @@ const ProductSchema = new mongoose.Schema(
             required: true
         },
         image: {
-            type: String,
-            trim: true,
-            required: true
+            type: Object,
+            default: {
+                path: "https://t3.ftcdn.net/jpg/04/34/72/82/240_F_434728286_OWQQvAFoXZLdGHlObozsolNeuSxhpr84.jpg"
+            }
         },
         desc: {
             type: String,
@@ -21,8 +22,8 @@ const ProductSchema = new mongoose.Schema(
             required: true
         },
         SKU: {   // stock keeping unit
-            type: Array,
-            default: []
+            type: String,
+            required: true
         },
         category: {
             type: String,
