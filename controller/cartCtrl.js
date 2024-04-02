@@ -1,10 +1,10 @@
 const { StatusCodes } = require('http-status-codes')
- const Cart = require('../model/cart')
+const Cart = require('../model/cart')
 
- // create 
- const createCart = async (req,res) => {
+// create
+const createCart = async (req,res) => {
     try {
-        let { products} = req.body
+        let { products } = req.body
         let user = req.userId
 
         // create cart
@@ -13,46 +13,72 @@ const { StatusCodes } = require('http-status-codes')
             products
         })
 
-        return res.status(StatusCodes.CREATED).json({ status: true, length: data.length, cart: data})
+        
+        return res.status(StatusCodes.CREATED).json({ status: true, length: data.length, cart: data })
     } catch (err) {
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ status: false, msg: err.message})
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ status: false, msg: err.message })
     }
- }
-
- // read all
- const allCart = async (req,res) => {
+}
+// read all
+const allCart = async (req,res) => {
     try {
-        return res.json({ msg: "all cart"})
-    } catch (err) {
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ status: false, msg: err.message})
-    }
- }
+        let data = await Cart.find({})
 
- // read single
- const singleCart = async (req,res) => {
+        return res.status(StatusCodes.OK).json({ status: true, length: data.length, carts: data})
+    } catch (err) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ status: false, msg: err.message })
+    }
+}
+// read single
+const singleCart = async (req,res) => {
     try {
-        return res.json({ msg: "single cart"})
-    } catch (err) {
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ status: false, msg: err.message})
-    }
- }
 
- // update
- const updateCart = async (req,res) => {
+        let id = req.params.id 
+
+        let extCart = await Cart.findById(id)
+
+            if(!extCart)
+                return res.status(StatusCodes.NOT_FOUND).json({ status: false, msg: `Requested cart id not found`})
+
+
+        return res.status(StatusCodes.OK).json({ status: true, cart: extCart })
+    } catch (err) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ status: false, msg: err.message })
+    }
+}
+// update
+const updateCart = async (req,res) => {
     try {
-        return res.json({ msg: "updtaed cart"})
-    } catch (err) {
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ status: false, msg: err.message})
-    }
- }
+        let id = req.params.id 
 
- // delete 
- const deleteCart = async (req,res) => {
+        let extCart = await Cart.findById(id)
+
+            if(!extCart)
+                return res.status(StatusCodes.NOT_FOUND).json({ status: false, msg: `Requested cart id not found`})
+
+        await Cart.findByIdAndUpdate({_id: id}, req.body)
+
+        return res.status(StatusCodes.ACCEPTED).json({ status: true, msg: "cart updated successfully"})
+    } catch (err) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ status: false, msg: err.message })
+    }
+}
+// delete 
+const deleteCart = async (req,res) => {
     try {
-        return res.json({ msg: "deleted cart"})
-    } catch (err) {
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ status: false, msg: err.message})
-    }
- }
+        let id = req.params.id 
 
- module.exports = { createCart, allCart, singleCart, updateCart, deleteCart}
+        let extCart = await Cart.findById(id)
+
+            if(!extCart)
+                return res.status(StatusCodes.NOT_FOUND).json({ status: false, msg: `Requested cart id not found`})
+
+        await Cart.findByIdAndDelete({_id: id})
+
+        return res.status(StatusCodes.ACCEPTED).json({ status: true, msg: "cart deleted successfully"})
+    } catch (err) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ status: false, msg: err.message })
+    }
+}
+
+module.exports = { createCart, allCart, singleCart, updateCart, deleteCart }
