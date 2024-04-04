@@ -42,7 +42,11 @@ function Menu() {
           <button data-bs-dismiss= "offcanvas" className='btn-close'></button>
         </div>
         <div className="offcanvas-body">
-          <div className="list-group text-center">
+          {
+            contextToken?.token ?  <p className="text-dark">Hi, { contextToken?.currentUser.name }</p> : null
+          }
+         
+          <div className="list-group text-center mt-2 mb-2">
             <NavLink to={`/`} className="list-group-item">Home</NavLink>
             <NavLink to={`/about`} className="list-group-item">About</NavLink>
             <NavLink to={`/contact`} className="list-group-item">Contact</NavLink>
@@ -50,7 +54,7 @@ function Menu() {
           {
             contextToken?.token && contextToken?.login ? (
               <div className="list-group text-center mt-2">
-              <NavLink to={`/dashboard`} className="list-group-item">Dashboard</NavLink>
+              <NavLink to={`/dashboard/${contextToken?.currentUser.role}`} className="list-group-item">Dashboard</NavLink>
               <button onClick={logout} className="btn btn-danger mt-2">Logout</button>
           </div>
             ) : (
