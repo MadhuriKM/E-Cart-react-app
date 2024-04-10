@@ -7,6 +7,7 @@ const morgan = require('morgan')
 const { StatusCodes } = require('http-status-codes')
 const cookieParser = require('cookie-parser')
 const dbConnect = require('./db/connect')
+const fileUpload = require('express-fileupload')
 
 const PORT = process.env.PORT
 
@@ -18,6 +19,12 @@ app.use(express.json())
 app.use(cors())
 app.use(cookieParser(process.env.ACCESS_SECRET)) // secure cookies
 app.use(morgan())
+app.use(fileUpload({
+    useTempFiles: true,
+    limits: {
+        fileSize: 5 *1024 *1024 // imag efile size upto 5Mb
+    }
+}))
 
 // initial route
 app.get(`/`, async (req,res) => {
@@ -30,6 +37,7 @@ app.use(`/api/category`, require('./route/categoryRoute'))
 app.use(`/api/product`, require('./route/productRoute'))
 app.use(`/api/cart`, require('./route/cartRoute'))
 app.use(`/api/order`, require('./route/orderRoute'))
+app.use(`/api/file`, require('./route/fileRoute'))
 
 // default route
 app.all(`/*`, async (req,res) => {
