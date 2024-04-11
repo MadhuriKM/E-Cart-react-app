@@ -24,3 +24,8 @@ code {
   border-color: #6c63ff !important;
   color: #fff !important;
 }
+
+.no-link {
+  text-decoration: none;
+}
+

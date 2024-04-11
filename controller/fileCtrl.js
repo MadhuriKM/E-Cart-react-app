@@ -44,9 +44,11 @@ const uploadImage = async (req,res) => {
                     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ status: false, msg: err})
                 }
 
-                // update the product collection
-                await Product.findByIdAndUpdate({ _id: product }, {image: thumbnail})
+                if(req.query.product) {
 
+                    // update the product collection
+                    await Product.findByIdAndUpdate({ _id: product }, {image: thumbnail})
+                }
                  res.status(StatusCodes.CREATED).json({ status: true, msg: "File uploaded successfully.", file: thumbnail})
             })
         } else {
